@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Shengjingwa/agent-config-hygiene/raw/main/schemas/report-v1.schema.json",
+  "title": "Agent Config Hygiene Report v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "tool_version",
+    "generated_at",
+    "scope",
+    "summary",
+    "artifacts",
+    "findings",
+    "privacy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "tool_version": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scope": {
+      "type": "object"
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "artifacts",
+        "findings",
+        "findings_by_severity"
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "scope",
+          "path",
+          "routes",
+          "coverage"
+        ]
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "code",
+          "severity",
+          "title",
+          "explanation",
+          "recommendation"
+        ],
+        "properties": {
+          "severity": {
+            "enum": [
+              "info",
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "required": [
+        "absolute_paths_emitted",
+        "free_text_emitted",
+        "memory_bodies_read",
+        "credential_stores_read",
+        "network_used"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-config-hygiene"
+version = "0.1.0"
+description = "Offline hygiene audits for Cursor, Claude Code, and Codex configuration"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+  { name = "agent-config-hygiene contributors" },
+]
+keywords = ["cursor", "claude-code", "codex", "agent-skills", "configuration"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Software Development :: Quality Assurance",
+]
+
+[project.urls]
+Homepage = "https://github.com/Shengjingwa/agent-config-hygiene"
+Issues = "https://github.com/Shengjingwa/agent-config-hygiene/issues"
+Privacy = "https://github.com/Shengjingwa/agent-config-hygiene/blob/main/PRIVACY.md"
+Security = "https://github.com/Shengjingwa/agent-config-hygiene/blob/main/SECURITY.md"
+
+[project.scripts]
+ach = "agent_config_hygiene.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.12,<1",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+agent_config_hygiene = ["resources/skill/agent-config-hygiene/SKILL.md"]
+
+[tool.setuptools.data-files]
+"share/agent-config-hygiene/schemas" = ["schemas/report-v1.schema.json"]
+"share/agent-config-hygiene/docs" = [
+  "PRIVACY.md",
+  "SECURITY.md",
+  "docs/discovery-contract.md",
+  "docs/scheduling.md",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
