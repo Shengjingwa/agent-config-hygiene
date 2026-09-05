@@ -58,7 +58,13 @@ class CliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             state = Path(directory) / "state"
             stdout = io.StringIO()
-            with redirect_stdout(stdout):
+            with (
+                patch(
+                    "agent_config_hygiene.scheduling.platform.system",
+                    return_value="Windows",
+                ),
+                redirect_stdout(stdout),
+            ):
                 result = main(
                     [
                         "schedule",

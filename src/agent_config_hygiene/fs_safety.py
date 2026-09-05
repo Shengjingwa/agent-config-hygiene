@@ -157,6 +157,27 @@ def is_linklike(path: Path) -> bool:
     return False
 
 
+def _is_stable_system_link(path: Path) -> bool:
+    """Return whether an unprivileged caller cannot replace a POSIX link."""
+    if os.name == "nt":
+        return False
+    try:
+        metadata = path.lstat()
+        current_uid = os.geteuid()
+        parent = path.parent.stat()
+        try:
+            parent_writable = os.access(
+                path.parent,
+                os.W_OK,
+                effective_ids=True,
+            )
+        except (NotImplementedError, TypeError):
+            parent_writable = os.access(path.parent, os.W_OK)
+    except (AttributeError, OSError):
+        return False
+    return metadata.st_uid != current_uid and stat.S_ISDIR(parent.st_mode) and not parent_writable
+
+
 def first_linklike_component(path: Path, boundary: Path) -> Path | None:
     """Find a link-like existing component from boundary through path."""
     lexical_path = Path(os.path.abspath(path))
@@ -166,11 +187,15 @@ def first_linklike_component(path: Path, boundary: Path) -> Path | None:
     except ValueError:
         return lexical_path if is_linklike(lexical_path) else None
     current = lexical_boundary
-    if os.path.lexists(current) and is_linklike(current):
+    if os.path.lexists(current) and is_linklike(current) and not _is_stable_system_link(current):
         return current
     for part in relative.parts:
         current = current / part
-        if os.path.lexists(current) and is_linklike(current):
+        if (
+            os.path.lexists(current)
+            and is_linklike(current)
+            and not _is_stable_system_link(current)
+        ):
             return current
     return None
 

@@ -174,9 +174,8 @@ class ScheduleTests(unittest.TestCase):
                     return_value="Darwin",
                 ),
                 patch(
-                    "agent_config_hygiene.scheduling.os.getuid",
+                    "agent_config_hygiene.scheduling._current_uid",
                     return_value=501,
-                    create=True,
                 ),
             ):
                 for offset, weekday in enumerate(weekdays):
@@ -499,9 +498,8 @@ class ScheduleTests(unittest.TestCase):
                     return_value="Darwin",
                 ),
                 patch(
-                    "agent_config_hygiene.scheduling.os.getuid",
+                    "agent_config_hygiene.scheduling._current_uid",
                     return_value=501,
-                    create=True,
                 ),
                 patch(
                     "agent_config_hygiene.scheduling._launchd_path",
@@ -563,9 +561,8 @@ class ScheduleTests(unittest.TestCase):
                     return_value="Darwin",
                 ),
                 patch(
-                    "agent_config_hygiene.scheduling.os.getuid",
+                    "agent_config_hygiene.scheduling._current_uid",
                     return_value=501,
-                    create=True,
                 ),
                 patch(
                     "agent_config_hygiene.scheduling._launchd_path",
@@ -644,9 +641,8 @@ class ScheduleTests(unittest.TestCase):
                     return_value="Darwin",
                 ),
                 patch(
-                    "agent_config_hygiene.scheduling.os.getuid",
+                    "agent_config_hygiene.scheduling._current_uid",
                     return_value=501,
-                    create=True,
                 ),
                 patch(
                     "agent_config_hygiene.scheduling._launchd_path",
@@ -681,9 +677,8 @@ class ScheduleTests(unittest.TestCase):
                     return_value="Darwin",
                 ),
                 patch(
-                    "agent_config_hygiene.scheduling.os.getuid",
+                    "agent_config_hygiene.scheduling._current_uid",
                     return_value=501,
-                    create=True,
                 ),
                 patch(
                     "agent_config_hygiene.scheduling._launchd_path",

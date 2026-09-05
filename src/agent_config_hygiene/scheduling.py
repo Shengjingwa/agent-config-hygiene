@@ -51,12 +51,19 @@ class CrontabChangedError(RuntimeError):
     pass
 
 
+def _current_uid() -> int:
+    getter = getattr(os, "getuid", None)
+    if getter is None:
+        raise RuntimeError("A POSIX user ID is unavailable on this platform")
+    return int(getter())
+
+
 @contextmanager
 def _scheduler_mutation_lock() -> Iterator[None]:
     if os.name == "nt":
         yield
         return
-    lock_root = Path("/tmp") / f"agent-config-hygiene-scheduler-{os.getuid()}"
+    lock_root = Path("/tmp") / f"agent-config-hygiene-scheduler-{_current_uid()}"
     lock_root.mkdir(mode=0o700, exist_ok=True)
     if not is_owned_directory(lock_root):
         raise RuntimeError("Scheduler mutation lock directory is unsafe")
@@ -281,7 +288,7 @@ def build_schedule_plan(spec: ScheduleSpec, root: Path) -> dict[str, object]:
             sort_keys=False,
         ).decode("utf-8")
         plist_path = _launchd_path(root)
-        domain = f"gui/{os.getuid()}"
+        domain = f"gui/{_current_uid()}"
         material = {
             "label": label,
             "plist_path": str(plist_path),
@@ -647,7 +654,7 @@ def _launchd_label_is_loaded(label: str) -> bool:
         [
             "launchctl",
             "print",
-            f"gui/{os.getuid()}/{label}",
+            f"gui/{_current_uid()}/{label}",
         ],
         check=False,
         capture_output=True,
@@ -1195,7 +1202,7 @@ def _uninstall_schedule_locked(root: Path) -> dict[str, object]:
                 [
                     "launchctl",
                     "bootout",
-                    f"gui/{os.getuid()}",
+                    f"gui/{_current_uid()}",
                     str(plist_path),
                 ],
                 check=False,
